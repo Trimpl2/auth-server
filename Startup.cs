@@ -90,16 +90,6 @@ namespace auth_server
                 .AddDeveloperSigningCredential();
 
             services.AddAccountApiAuth(Configuration);
-            /*services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.Authority = "https://localhost:5001";
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = false
-                    };
-                });*/
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -36,7 +36,7 @@ namespace auth_server.Controllers
 
                 ClientId = "client",
                 ClientSecret = "secret",
-                Scope = "api1"
+                Scope = "api"
             });
 
             if (tokenResponse.IsError)
