@@ -90,7 +90,6 @@ namespace auth_server
                 .AddDeveloperSigningCredential();
 
             services.AddAccountApiAuth(Configuration);
-            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
