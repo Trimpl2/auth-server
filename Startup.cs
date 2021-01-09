@@ -1,3 +1,4 @@
+using auth_server.Infrastructure.Extensions;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using AuthServer = auth_server.Data.AuthServer;
 
@@ -76,9 +78,28 @@ namespace auth_server
                         optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                     };
                 })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = optionsBuilder =>
+                    {
+                        optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                    };
+                })
                 .AddInMemoryApiScopes(AuthServer.Config.ApiScopes)
                 .AddInMemoryClients(AuthServer.Config.Clients)
                 .AddDeveloperSigningCredential();
+
+            services.AddAccountApiAuth(Configuration);
+            /*services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:5001";
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });*/
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -92,14 +113,18 @@ namespace auth_server
             }
 
             app.UseIdentityServer();
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
