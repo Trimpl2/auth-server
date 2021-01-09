@@ -8,7 +8,7 @@ namespace auth_server.Data.AuthServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
-                new ApiScope("api1", "My API")
+                new ApiScope("api", "My API")
             };
 
         public static IEnumerable<Client> Clients =>
